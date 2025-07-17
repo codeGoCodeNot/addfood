@@ -1,4 +1,6 @@
 import { FetchWrapper } from "./fetchWrapper.js";
+import { capitalize } from "./helper.js";
+import { calculateCalories } from "./helper.js";
 
 const api = new FetchWrapper(
   "https://firestore.googleapis.com/v1/projects/jsdemo-3f387/databases/(default)/documents/foodname"
@@ -33,16 +35,26 @@ form.addEventListener("submit", (event) => {
     foodList.insertAdjacentHTML(
       "beforeend",
       `<li class="card">
-  <div>
-    <h3 class="name">${name.value}</h3>
-    <div class="calories">0 calories</div>
-    <ul class="macros">
-      <li class="carbs"><div>Carbs</div><div class="value">${carbs.value}g</div></li>
-      <li class="protein"><div>Protein</div><div class="value">${protein.value}g</div></li>
-      <li class="fat"><div>Fat</div><div class="value">${fat.value}g</div></li>
-    </ul>
-  </div>
-    </li>`
+          <div>
+            <h3 class="name">${capitalize(name.value)}</h3>
+            <div class="calories">${calculateCalories(
+              carbs.value,
+              protein.value,
+              fat.value
+            )} calories</div>
+            <ul class="macros">
+              <li class="carbs"><div>Carbs</div><div class="value">${
+                carbs.value
+              }g</div></li>
+              <li class="protein"><div>Protein</div><div class="value">${
+                protein.value
+              }g</div></li>
+              <li class="fat"><div>Fat</div><div class="value">${
+                fat.value
+              }g</div></li>
+            </ul>
+          </div>
+        </li>`
     );
 
     name.value = "";
