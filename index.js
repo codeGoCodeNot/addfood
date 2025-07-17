@@ -1,6 +1,6 @@
 import { FetchWrapper } from "./fetchWrapper.js";
-import { capitalize } from "./helper.js";
-import { calculateCalories } from "./helper.js";
+import { capitalize, calculateCalories } from "./helper.js";
+import snackbar from "https://cdn.skypack.dev/snackbar";
 
 const api = new FetchWrapper(
   "https://firestore.googleapis.com/v1/projects/jsdemo-3f387/databases/(default)/documents/foodname"
@@ -29,6 +29,7 @@ form.addEventListener("submit", (event) => {
     console.log(data);
 
     if (data.error) {
+      snackbar.show("Some data is missing.");
       return;
     }
 
@@ -56,6 +57,8 @@ form.addEventListener("submit", (event) => {
           </div>
         </li>`
     );
+
+    snackbar.show("Food added successfully.");
 
     name.value = "";
     carbs.value = "";
