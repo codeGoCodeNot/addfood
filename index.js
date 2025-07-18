@@ -4,8 +4,9 @@ import snackbar from "https://cdn.skypack.dev/snackbar";
 import { AppData } from "./app-data.js";
 import Chart from "chart.js/auto";
 
+const collectionName = "foodname8";
 const api = new FetchWrapper(
-  "https://firestore.googleapis.com/v1/projects/jsdemo-3f387/databases/(default)/documents/foodname"
+  `https://firestore.googleapis.com/v1/projects/jsdemo-3f387/databases/(default)/documents/${collectionName}`
 );
 
 const form = document.querySelector("#create-form");
