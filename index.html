@@ -8,6 +8,7 @@
       rel="stylesheet"
       href="https://cdn.skypack.dev/snackbar@1/dist/snackbar.min.css"
     />
+
     <link rel="stylesheet" href="style.css" />
     <title>Document</title>
   </head>
@@ -68,12 +69,14 @@
           />
         </div>
       </form>
+      <h2>Stats</h2>
+      <canvas id="app-chart" width="100%"></canvas>
       <h2>Log</h2>
       <div class="card" id="total-calories-container">
         <h3>Total calories logged: <span id="total-calories">0</span></h3>
       </div>
       <ul id="food-list"></ul>
     </div>
-    <script src="index.js" defer type="module"></script>
+    <script src="./index.js" defer type="module"></script>
   </body>
 </html>

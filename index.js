@@ -1,6 +1,8 @@
 import { FetchWrapper } from "./fetchWrapper.js";
 import { capitalize, calculateCalories } from "./helper.js";
 import snackbar from "https://cdn.skypack.dev/snackbar";
+import { AppData } from "./app-data.js";
+import Chart from "chart.js/auto";
 
 const api = new FetchWrapper(
   "https://firestore.googleapis.com/v1/projects/jsdemo-3f387/databases/(default)/documents/foodname"
@@ -12,8 +14,10 @@ const carbs = document.querySelector("#create-carbs");
 const protein = document.querySelector("#create-protein");
 const fat = document.querySelector("#create-fat");
 const foodList = document.querySelector("#food-list");
+const appData = new AppData();
 
 const displayEntry = (name, carbs, protein, fat) => {
+  appData.addFood(Number(carbs), Number(protein), Number(fat));
   foodList.insertAdjacentHTML(
     "beforeend",
     `
@@ -59,6 +63,7 @@ form.addEventListener("submit", (event) => {
     snackbar.show("Food added successfully.");
 
     displayEntry(name.value, carbs.value, protein.value, fat.value);
+    render();
 
     name.value = "";
     carbs.value = "";
@@ -76,7 +81,6 @@ const init = () => {
 
     data.documents?.forEach((doc) => {
       const fields = doc.fields;
-      console.log(fields);
 
       displayEntry(
         fields.name.stringValue,
@@ -85,6 +89,50 @@ const init = () => {
         fields.fat.integerValue
       );
     });
+    render();
   });
 };
+
+let chartInstance = null;
+const renderChart = () => {
+  chartInstance?.destroy();
+  const context = document.querySelector("#app-chart").getContext("2d");
+
+  chartInstance = new Chart(context, {
+    type: "bar",
+    data: {
+      labels: ["Carbs", "Protein", "Fat"],
+      datasets: [
+        {
+          label: "Macronutrients",
+          data: [
+            appData.getTotalCarbs(),
+            appData.getTotalProtein(),
+            appData.getTotalFat(),
+          ],
+          backgroundColor: ["#25AEEE", "#FECD52", "#57D269"],
+          borderWidth: 3, // example of other customization
+        },
+      ],
+    },
+    options: {
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
+      },
+    },
+  });
+};
+
+const render = () => {
+  renderChart();
+  const totalCalories = document.querySelector("#total-calories");
+  totalCalories.textContent = appData.getTotalCalories();
+};
+
 init();
