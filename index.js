@@ -13,6 +13,29 @@ const protein = document.querySelector("#create-protein");
 const fat = document.querySelector("#create-fat");
 const foodList = document.querySelector("#food-list");
 
+const displayEntry = (name, carbs, protein, fat) => {
+  foodList.insertAdjacentHTML(
+    "beforeend",
+    `
+    <li class="card">
+      <div>
+        <h3 class="name">${capitalize(name)}</h3>
+        <div class="calories">${calculateCalories(
+          carbs,
+          protein,
+          fat
+        )} calories</div>
+        <ul class="macros">
+          <li class="carbs"><div>Carbs</div><div class="value">${carbs}g</div></li>
+          <li class="protein"><div>Protein</div><div class="value">${protein}g</div></li>
+          <li class="fat"><div>Fat</div><div class="value">${fat}g</div></li>
+        </ul>
+      </div>
+    </li>
+    `
+  );
+};
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
 
@@ -33,32 +56,9 @@ form.addEventListener("submit", (event) => {
       return;
     }
 
-    foodList.insertAdjacentHTML(
-      "beforeend",
-      `<li class="card">
-          <div>
-            <h3 class="name">${capitalize(name.value)}</h3>
-            <div class="calories">${calculateCalories(
-              carbs.value,
-              protein.value,
-              fat.value
-            )} calories</div>
-            <ul class="macros">
-              <li class="carbs"><div>Carbs</div><div class="value">${
-                carbs.value
-              }g</div></li>
-              <li class="protein"><div>Protein</div><div class="value">${
-                protein.value
-              }g</div></li>
-              <li class="fat"><div>Fat</div><div class="value">${
-                fat.value
-              }g</div></li>
-            </ul>
-          </div>
-        </li>`
-    );
-
     snackbar.show("Food added successfully.");
+
+    displayEntry(name.value, carbs.value, protein.value, fat.value);
 
     name.value = "";
     carbs.value = "";
@@ -77,31 +77,12 @@ const init = () => {
     data.documents?.forEach((doc) => {
       const fields = doc.fields;
       console.log(fields);
-      foodList.insertAdjacentHTML(
-        "beforeend",
-        `
-        <li class="card">
-        <div>
-            <h3 class="name">${capitalize(fields.name.stringValue)}</h3>
-            <div class="calories">${calculateCalories(
-              fields.carbs.integerValue,
-              fields.protein.integerValue,
-              fields.fat.integerValue
-            )}</div>
-            <ul class="macros">
-            <li class="carbs"><div>Carbs</div><div class="value">${
-              fields.carbs.integerValue
-            }g</div></li>
-            <li class="protein"><div>Protein</div><div class="value">${
-              fields.protein.integerValue
-            }g</div></li>
-            <li class="fat"><div>Fat</div><div class="value">${
-              fields.fat.integerValue
-            }g</div></li>
-            </ul>
-        </div>
-        </li>
-        `
+
+      displayEntry(
+        fields.name.stringValue,
+        fields.carbs.integerValue,
+        fields.protein.integerValue,
+        fields.fat.integerValue
       );
     });
   });
